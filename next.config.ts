@@ -10,9 +10,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "static-cdn.jtvnw.net" },         // Twitch avatars
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ["@prisma/client", "bcryptjs"],
-  },
+  serverExternalPackages: ["@prisma/client", "bcryptjs"],
 };
 
 export default nextConfig;
