@@ -3,13 +3,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 
-// GET /api/users/[username]
+// Returns a user's public profile with their recent clips
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
   const user = await db.user.findUnique({
     where: { username },
     select: {
-      id: true, username: true, avatar: true, bio: true, createdAt: true,
+      id: true, username: true, avatar: true, displayName: true, bio: true, snapId: true, twitter: true, discord: true, twitch: true, youtube: true, createdAt: true,
       _count: { select: { clips: true, followers: true, following: true } },
       clips: {
         where:   { visibility: "public" },
@@ -24,7 +24,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ use
   return NextResponse.json(user);
 }
 
-// POST /api/users/[username]/follow — toggle follow
+// Toggles a follow relationship between the current user and the target
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
   const session = await getServerSession(authOptions);

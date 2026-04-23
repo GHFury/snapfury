@@ -5,12 +5,12 @@ import { db } from "@/lib/db";
 
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? "").split(",").map(e => e.trim());
 
-// POST /api/sotw/winner — admin picks the winner
+// Admin-only endpoint to crown the Snap of the Week winner
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  // Simple admin gate — add your email to ADMIN_EMAILS in .env
+  // Basic email allowlist — add your address to ADMIN_EMAILS in .env to get access
   if (!ADMIN_EMAILS.includes(session.user.email ?? ""))
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
@@ -29,8 +29,8 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // TODO: send winner notification email
-  // TODO: trigger YouTube upload via YouTube Data API
+  // TODO: notify the winner by email
+  // TODO: push the clip to the Snap Fury YouTube channel
 
   return NextResponse.json({ success: true, winner });
 }

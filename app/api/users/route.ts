@@ -9,7 +9,7 @@ const schema = z.object({
   password: z.string().min(8),
 });
 
-// POST /api/users — register
+// Creates a new user account with hashed password
 export async function POST(req: NextRequest) {
   const body   = await req.json();
   const parsed = schema.safeParse(body);

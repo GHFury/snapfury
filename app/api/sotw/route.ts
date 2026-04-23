@@ -14,7 +14,7 @@ function currentWeekStart() {
   return mon;
 }
 
-// GET /api/sotw — current winner + this week's entries
+// Returns the current Snap of the Week winner and this week's entry list
 export async function GET() {
   const weekStart = currentWeekStart();
 
@@ -52,7 +52,7 @@ export async function GET() {
   return NextResponse.json({ winner, entries, entryCount, weekStart });
 }
 
-// POST /api/sotw — enter this week's clip
+// Enters a clip into this week's Snap of the Week contest
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

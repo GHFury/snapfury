@@ -13,7 +13,7 @@ const createSchema = z.object({
   visibility:  z.enum(["public", "unlisted"]).default("public"),
 });
 
-// GET /api/clips — list clips (paginated)
+// Returns a paginated list of public clips with sorting and tag filtering
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const page    = Math.max(1, Number(searchParams.get("page")  ?? 1));
@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ clips, total, page, pages: Math.ceil(total / limit) });
 }
 
-// POST /api/clips — create a clip
+// Creates a new clip record after the video has been uploaded to storage
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
