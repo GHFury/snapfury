@@ -13,6 +13,7 @@ export default function Navbar() {
     ["CLIPS",       "/clips"],
     ["UPLOAD",      "/upload"],
     ["LEADERBOARD", "/leaderboard"],
+    ["GET CLIPFURY", "/download"],
   ];
 
   const isActive = (href: string) =>
