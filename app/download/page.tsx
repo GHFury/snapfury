@@ -100,7 +100,7 @@ export default function DownloadPage() {
               <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
                 {/* Download button — points to GitHub releases */}
                 <a
-                  href="https://github.com/YOUR_GITHUB_USERNAME/clipfury/releases/latest/download/ClipFury-Setup-0.1.0-beta.exe"
+                  href="https://github.com/GHFury/clipfury/releases/latest/download/ClipFury-Setup-0.1.0-beta.exe"
                   className="btn pulse"
                   style={{ background: "#C8952A", color: "#111", padding: "14px 36px", fontSize: "1.6rem", boxShadow: "6px 6px 0 #111", borderRadius: 3 }}
                 >
