@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getAuthUser } from "@/lib/get-auth-user";
 import { db } from "@/lib/db";
 import { z } from "zod";
 
@@ -53,8 +52,8 @@ export async function GET(req: NextRequest) {
 
 // Creates a new clip record after the video has been uploaded to storage
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const user = await getAuthUser(req);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body   = await req.json();
   const parsed = createSchema.safeParse(body);
@@ -69,7 +68,7 @@ export async function POST(req: NextRequest) {
       videoUrl,
       thumbnailUrl,
       visibility,
-      userId: session.user.id,
+      userId: user.id,
       tags: { create: tags.map(tag => ({ tag })) },
     },
     include: {

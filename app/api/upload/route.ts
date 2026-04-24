@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getAuthUser } from "@/lib/get-auth-user";
 
 const ALLOWED_VIDEO_TYPES = [
   "video/mp4", "video/quicktime", "video/x-msvideo",
@@ -15,8 +14,8 @@ const supabaseConfigured = !!(
 );
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id)
+  const user = await getAuthUser(req);
+  if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { filename, contentType, size, type } = await req.json();
@@ -34,14 +33,14 @@ export async function POST(req: NextRequest) {
     if (!supabaseConfigured) {
       const slug = Date.now().toString(36);
       const ext  = (filename as string).split(".").pop() ?? "mp4";
-      const path = `clips/${session.user.id}/${slug}.${ext}`;
+      const path = `clips/${user.id}/${slug}.${ext}`;
       const devUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/upload/dev-accept`;
       return NextResponse.json({ url: devUrl, path, publicUrl: `https://placeholder.snapfury.com/${path}`, dev: true });
     }
 
     // PRODUCTION — Supabase Storage signed upload URL
     const { getSupabaseUploadUrl, getPublicUrl, clipPath } = await import("@/lib/supabase-storage");
-    const path = clipPath(session.user.id, filename as string);
+    const path = clipPath(user.id, filename as string);
     const { signedUrl } = await getSupabaseUploadUrl(path);
     const publicUrl = getPublicUrl(path);
     return NextResponse.json({ url: signedUrl, path, publicUrl, dev: false });

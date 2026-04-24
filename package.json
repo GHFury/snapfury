@@ -23,6 +23,7 @@
     "next-auth": "^4.24.11",
     "react": "^19",
     "react-dom": "^19",
+    "jose": "^5.9.6",
     "zod": "^3.23.8",
     "@supabase/supabase-js": "^2.45.0"
   },
